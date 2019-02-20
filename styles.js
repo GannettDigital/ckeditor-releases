@@ -14,7 +14,7 @@
 // website requirements and design properly.
 //
 // For more information refer to: http://docs.ckeditor.com/#!/guide/dev_styles-section-style-rules
-
+//
 CKEDITOR.stylesSet.add( 'default', [
 
 	{ name: 'H2', element: 'h2', attributes: { 'class': 'presto-h2' } },
