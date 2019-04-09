@@ -12,6 +12,8 @@
     "pretest:docker": "npm run build:docker-test",
     "debug:docker": "NODE_ENV=integration APP_NAME=${npm_package_name} VERSION=${npm_package_version} TEAM=${npm_package_author_name} source export_secrets.sh && docker run --rm ${process_envs[@]} -it ${npm_package_name}-test:${npm_package_version} /bin/bash",
     "debug:docker-root": "NODE_ENV=integration APP_NAME=${npm_package_name} VERSION=${npm_package_version} TEAM=${npm_package_author_name} source export_secrets.sh && docker run --rm ${process_envs[@]} --user root -it ${npm_package_name}-test:${npm_package_version} /bin/bash",
-    "prestart:docker-test": "npm run build:docker-test"
+    "prestart:docker-test": "npm run build:docker-test",
+    "test:lint": "npm ls",
+    "test:unit": "npm ls"
   }
 }
