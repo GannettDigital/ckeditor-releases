@@ -1,0 +1,41 @@
+# template version 0.0.1
+# ---- Base Node ----
+FROM quay.io/gannett/paas-centos7-base:latest AS base
+
+# set build-args for this base
+ARG VERSION
+ARG APP_NAME
+ARG TEAM
+
+# install packages
+RUN yum -y install gcc-c++ git make nodejs-8.9.4-1nodesource.x86_64 libcouchbase2-core
+
+# set envs & working directory
+ENV NODE_USER=node
+RUN useradd -ms /bin/bash ${NODE_USER}
+ENV APP_NAME=${APP_NAME}
+ENV NODE_ENV=integration
+WORKDIR /opt/gannett/${APP_NAME}
+RUN chown ${NODE_USER}:${NODE_USER} /opt/gannett/${APP_NAME}
+
+
+# ---- Dependencies ----
+FROM base AS dependencies
+
+# install compilers needed for libcouchbase2-core & newrelic native-metrics module
+RUN yum install -y gcc-c++ make
+
+RUN yum -y install tini
+
+ENTRYPOINT ["tini", "--"]
+
+# copy project source
+COPY package.json package-lock.json .npmrc ./
+
+# ---- Release ----
+FROM base AS release
+
+# copy project source
+COPY package.json package-lock.json ./
+
+USER ${NODE_USER}
