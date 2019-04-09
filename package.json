@@ -5,5 +5,13 @@
   "license": "UNLICENSED",
   "author": {
     "name": "content-engineering"
+  },
+  "scripts": {
+    "build:docker-test": "docker build --rm -t ${npm_package_name}-test:${npm_package_version} --build-arg VERSION=${npm_package_version} --build-arg APP_NAME=${npm_package_name} --build-arg TEAM=${npm_package_author_name} -f Dockerfile.test .",
+    "test:docker": "VAULT_TOKEN=$(cat ~/.vault-token | xargs) DEPLOY_ENV=integration NODE_ENV=integration docker run --rm -e DEPLOY_ENV -e NODE_ENV -e VAULT_TOKEN ${npm_package_name}-test:${npm_package_version} npm run test-docker",
+    "pretest:docker": "npm run build:docker-test",
+    "debug:docker": "NODE_ENV=integration APP_NAME=${npm_package_name} VERSION=${npm_package_version} TEAM=${npm_package_author_name} source export_secrets.sh && docker run --rm ${process_envs[@]} -it ${npm_package_name}-test:${npm_package_version} /bin/bash",
+    "debug:docker-root": "NODE_ENV=integration APP_NAME=${npm_package_name} VERSION=${npm_package_version} TEAM=${npm_package_author_name} source export_secrets.sh && docker run --rm ${process_envs[@]} --user root -it ${npm_package_name}-test:${npm_package_version} /bin/bash",
+    "prestart:docker-test": "npm run build:docker-test"
   }
 }
